@@ -30,6 +30,7 @@ ALLOWED_HOSTS = config(
     default="localhost,127.0.0.1"
 ).split(",")
 
+AUTH_USER_MODEL = "accounts.User"
 
 # Application definition
 
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
     "tailwind",
     "theme",
     "reports",
+    "accounts",
 ]
 
 if DEBUG:
