@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "tailwind",
     "theme",
     "reports",
+    "accounts",
 ]
 
 if DEBUG:
