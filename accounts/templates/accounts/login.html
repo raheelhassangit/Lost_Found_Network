@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Login — Lost & Found Network{% endblock %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center px-4">
+    <div class="flex w-full max-w-3xl rounded-2xl overflow-hidden shadow-xl">
+
+        <div class="w-full md:w-3/5 bg-white p-10">
+            <h1 class="text-3xl font-bold mb-8">Welcome</h1>
+
+            {% if form.non_field_errors %}
+                <p class="text-red-600 text-sm mb-4">{{ form.non_field_errors.0 }}</p>
+            {% endif %}
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                <div>
+                    <label class="block text-xs tracking-wide text-gray-500 mb-1">Username</label>
+                    <input type="text" name="username" required
+                           class="w-full border-b border-gray-300 focus:border-amber-600 outline-none py-1 bg-transparent">
+                </div>
+                <div>
+                    <label class="block text-xs tracking-wide text-gray-500 mb-1">Password</label>
+                    <input type="password" name="password" required
+                           class="w-full border-b border-gray-300 focus:border-amber-600 outline-none py-1 bg-transparent">
+                </div>
+                <button type="submit"
+                        class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-full font-medium transition">
+                    Sign in
+                </button>
+            </form>
+        </div>
+
+        <div class="hidden md:flex w-2/5 bg-stone-700 text-white flex-col items-center justify-center p-8 text-center space-y-4">
+            <p class="font-medium">Don't have an account?<br>Please sign up!</p>
+            <a href="{% url 'accounts:signup' %}"
+               class="border border-white rounded-full px-6 py-2 text-sm hover:bg-white hover:text-stone-700 transition">
+                Sign up
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
