@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "theme",
     "reports",
     "accounts",
+    "widget_tweaks",
 ]
 
 if DEBUG:
