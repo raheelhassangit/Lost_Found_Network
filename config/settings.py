@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "reports",
     "accounts",
     "widget_tweaks",
+    "core",
 ]
 
 if DEBUG:
@@ -73,7 +74,7 @@ if DEBUG:
 ROOT_URLCONF = "config.urls"
 
 LOGIN_URL = "accounts:login"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = "core:home"
 LOGOUT_REDIRECT_URL = "accounts:login"
 
 TEMPLATES = [
