@@ -1,0 +1,29 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{% block title %}Lost & Found Network{% endblock %}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% tailwind_css %}
+</head>
+<body class="bg-stone-50 text-stone-900 font-sans leading-normal">
+
+{% if messages %}
+<div class="max-w-3xl mx-auto px-4 pt-4">
+    {% for message in messages %}
+    <div class="rounded-lg px-4 py-3 text-sm mb-2
+        {% if message.tags == 'success' %}bg-green-50 text-green-800
+        {% elif message.tags == 'error' %}bg-red-50 text-red-800
+        {% else %}bg-stone-100 text-stone-700{% endif %}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% block content %}{% endblock %}
+
+</body>
+</html>
