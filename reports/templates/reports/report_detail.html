@@ -52,8 +52,8 @@
             </div>
             {% elif user == report.user %}
             <div class="border-t border-stone-200 pt-6 flex gap-3">
-                <a href="#" class="text-sm text-amber-600 font-medium hover:text-amber-700">Edit report</a>
-                <a href="#" class="text-sm text-red-600 font-medium hover:text-red-700">Delete report</a>
+                <a href="{% url 'reports:update' report.pk %}" class="text-sm text-amber-600 font-medium hover:text-amber-700">Edit report</a>
+                <a href="{% url 'reports:delete' report.pk %}" class="text-sm text-red-600 font-medium hover:text-red-700">Delete report</a>
             </div>
             {% endif %}
         </div>

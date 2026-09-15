@@ -8,7 +8,9 @@
     <div class="bg-white rounded-2xl shadow-xl border border-stone-200 p-8 sm:p-10">
 
         <h1 class="font-serif text-2xl font-bold mb-1">
-            {% if report_type == "FOUND" %}Post a found item{% else %}Report a lost item{% endif %}
+            {% if editing %}
+                Edit report
+            {% elif report_type == "FOUND" %}Post a found item{% else %}Report a lost item{% endif %}
         </h1>
         <p class="text-stone-500 text-sm mb-7">
             {% if report_type == "FOUND" %}
@@ -35,7 +37,7 @@
 
             <button type="submit"
                     class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-full font-medium transition">
-                {% if report_type == "FOUND" %}Post report{% else %}Submit report{% endif %}
+                {% if editing %}Save changes{% elif report_type == "FOUND" %}Post report{% else %}Submit report{% endif %}
             </button>
         </form>
     </div>
