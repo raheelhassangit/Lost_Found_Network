@@ -65,3 +65,7 @@ def report_create_view(request, report_type):
         "form": form,
         "report_type": report_type,
     })
+    
+def report_detail_view(request, pk):
+    report = get_object_or_404(Report.objects.select_related("category", "user"), pk=pk)
+    return render(request, "reports/report_detail.html", {"report": report})    
