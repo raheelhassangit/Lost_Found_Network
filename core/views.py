@@ -29,3 +29,6 @@ def add_testimonial_view(request):
         form = TestimonialForm()
 
     return render(request, "core/add_testimonial.html", {"form": form})
+
+def support_view(request):
+    return render(request, "core/support.html")
