@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Browse reports{% endblock %}
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-serif text-3xl font-bold mb-8">Browse reports</h1>
+
+    <form method="get" class="bg-white rounded-xl border border-stone-200 p-5 mb-8 flex flex-col sm:flex-row gap-4">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search by item, description, or location..."
+               class="flex-1 border border-stone-300 rounded-lg px-3 py-2 outline-none focus:border-amber-600">
+
+        <select name="type" class="border border-stone-300 rounded-lg px-3 py-2 outline-none focus:border-amber-600">
+            <option value="" {% if not selected_type %}selected{% endif %}>All types</option>
+            <option value="LOST" {% if selected_type == "LOST" %}selected{% endif %}>Lost</option>
+            <option value="FOUND" {% if selected_type == "FOUND" %}selected{% endif %}>Found</option>
+        </select>
+
+        <select name="category" class="border border-stone-300 rounded-lg px-3 py-2 outline-none focus:border-amber-600">
+            <option value="">All categories</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}" {% if selected_category == cat.id|stringformat:"s" %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2 rounded-lg font-medium transition">
+            Filter
+        </button>
+    </form>
+
+    {% if page_obj %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for report in page_obj %}
+        <a href="{% url 'reports:detail' report.pk %}" class="bg-white rounded-xl border border-stone-200 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition block">
+            {% if report.image %}
+                <img src="{{ report.image.url }}" alt="{{ report.item_name }}" class="w-full h-44 object-cover">
+            {% else %}
+                <div class="w-full h-44 bg-stone-100 flex items-center justify-center text-stone-400 text-sm">No image</div>
+            {% endif %}
+            <div class="p-5">
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full
+                    {% if report.report_type == 'LOST' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">
+                    {{ report.get_report_type_display }}
+                </span>
+                <h3 class="font-semibold mt-3">{{ report.item_name }}</h3>
+                <p class="text-sm text-stone-500 mt-1">{{ report.location }} &middot; {{ report.date }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.has_other_pages %}
+    <div class="flex justify-center gap-2 mt-10">
+        {% if page_obj.has_previous %}
+        <a href="?{{ querystring }}&page={{ page_obj.previous_page_number }}"
+           class="px-4 py-2 rounded-lg border border-stone-300 text-sm hover:bg-stone-100">Previous</a>
+        {% endif %}
+        <span class="px-4 py-2 text-sm text-stone-500">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+        <a href="?{{ querystring }}&page={{ page_obj.next_page_number }}"
+           class="px-4 py-2 rounded-lg border border-stone-300 text-sm hover:bg-stone-100">Next</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% else %}
+    <div class="bg-white rounded-xl border border-dashed border-stone-300 p-10 text-center text-stone-500">
+        No reports match your filters.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

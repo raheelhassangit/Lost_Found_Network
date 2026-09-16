@@ -21,7 +21,7 @@
                 <h2 class="font-serif text-2xl font-bold mb-2">Found something?</h2>
                 <p class="text-stone-600 mb-6">Post it here so the owner can find their way back to it.</p>
                 {% if user.is_authenticated %}
-                    <a href="#" class="inline-block bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-full font-medium transition w-fit">
+                    <a href="{% url 'reports:create' 'found' %}" class="inline-block bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-full font-medium transition w-fit">
                         Post a found item
                     </a>
                 {% else %}
@@ -39,7 +39,7 @@
                 <h2 class="font-serif text-2xl font-bold mb-2">Lost something?</h2>
                 <p class="text-stone-300 mb-6">Report it, and the community can help you track it down.</p>
                 {% if user.is_authenticated %}
-                    <a href="#" class="inline-block border border-white hover:bg-white hover:text-stone-800 px-6 py-3 rounded-full font-medium transition w-fit">
+                    <a href="{% url 'reports:create' 'lost' %}" class="inline-block border border-white hover:bg-white hover:text-stone-800 px-6 py-3 rounded-full font-medium transition w-fit">
                         Report a lost item
                     </a>
                 {% else %}
@@ -58,7 +58,7 @@
     {% if recent_reports %}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for report in recent_reports %}
-        <a href="#" class="bg-white rounded-xl border border-stone-200 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition block">
+        <a href="{% url 'reports:detail' report.pk %}" class="bg-white rounded-xl border border-stone-200 overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition block">
             {% if report.image %}
                 <img src="{{ report.image.url }}" alt="{{ report.item_name }}" class="w-full h-44 object-cover">
             {% else %}

@@ -30,9 +30,12 @@
         </a>
 
         <div class="hidden md:flex items-center gap-8 text-sm font-medium text-stone-600">
-            <a href="{% url 'core:home' %}#recent" class="hover:text-amber-600 transition">Recent reports</a>
-            <a href="{% url 'core:home' %}#how-it-works" class="hover:text-amber-600 transition">How it works</a>
+            <a href="{% url 'reports:list' %}" class="hover:text-amber-600 transition">Browse all reports</a>
+            {% if user.is_authenticated %}
+            <a href="{% url 'reports:my_reports' %}" class="hover:text-amber-600 transition">My reports</a>
+            {% endif %}
             <a href="{% url 'core:home' %}#reviews" class="hover:text-amber-600 transition">Reviews</a>
+            <a href="{% url 'core:add_testimonial' %}" class="hover:text-amber-600 transition">Support the platform</a>
         </div>
 
         <div class="flex items-center gap-3 sm:gap-4 text-sm">
@@ -57,9 +60,12 @@
     </div>
 
     <div id="mobile-menu" class="hidden md:hidden border-t border-stone-200 px-4 py-3 flex flex-col gap-3 text-sm font-medium text-stone-600">
-        <a href="{% url 'core:home' %}#recent" class="hover:text-amber-600 transition">Recent reports</a>
-        <a href="{% url 'core:home' %}#how-it-works" class="hover:text-amber-600 transition">How it works</a>
+        <a href="{% url 'reports:list' %}" class="hover:text-amber-600 transition">Browse all reports</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'reports:my_reports' %}" class="hover:text-amber-600 transition">My reports</a>
+        {% endif %}
         <a href="{% url 'core:home' %}#reviews" class="hover:text-amber-600 transition">Reviews</a>
+        <a href="{% url 'core:add_testimonial' %}" class="hover:text-amber-600 transition">Support the platform</a>
     </div>
 </nav>
 
@@ -97,9 +103,12 @@
         <div>
             <h3 class="text-white font-medium mb-3 text-sm">Explore</h3>
             <ul class="space-y-2 text-sm text-stone-400">
-                <li><a href="{% url 'core:home' %}#recent" class="hover:text-amber-500 transition">Recent reports</a></li>
-                <li><a href="{% url 'core:home' %}#how-it-works" class="hover:text-amber-500 transition">How it works</a></li>
+                <li><a href="{% url 'reports:list' %}" class="hover:text-amber-500 transition">Browse all reports</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'reports:my_reports' %}" class="hover:text-amber-500 transition">My reports</a></li>
+                {% endif %}
                 <li><a href="{% url 'core:home' %}#reviews" class="hover:text-amber-500 transition">Reviews</a></li>
+                <li><a href="{% url 'core:add_testimonial' %}" class="hover:text-amber-500 transition">Support the platform</a></li>
             </ul>
         </div>
 
