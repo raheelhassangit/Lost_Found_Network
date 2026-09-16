@@ -106,3 +106,8 @@ def report_list_view(request):
         "query": query or "",
         "querystring": params.urlencode(),
     })
+    
+@login_required
+def my_reports_view(request):
+    reports = Report.objects.filter(user=request.user).select_related("category").order_by("-created_at")
+    return render(request, "reports/my_reports.html", {"reports": reports})    
