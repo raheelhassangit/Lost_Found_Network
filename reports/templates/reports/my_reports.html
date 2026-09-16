@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}My reports{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-serif text-3xl font-bold mb-8">My reports</h1>
+
+    {% if reports %}
+    <div class="space-y-4">
+        {% for report in reports %}
+        <div class="bg-white rounded-xl border border-stone-200 p-5 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                {% if report.image %}
+                    <img src="{{ report.image.url }}" alt="" class="w-16 h-16 object-cover rounded-lg">
+                {% else %}
+                    <div class="w-16 h-16 bg-stone-100 rounded-lg flex items-center justify-center text-stone-400 text-xs">No image</div>
+                {% endif %}
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full
+                            {% if report.report_type == 'LOST' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">
+                            {{ report.get_report_type_display }}
+                        </span>
+                        <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-600">
+                            {{ report.get_status_display }}
+                        </span>
+                    </div>
+                    <h3 class="font-semibold">{{ report.item_name }}</h3>
+                    <p class="text-sm text-stone-500">{{ report.location }} &middot; {{ report.date }}</p>
+                </div>
+            </div>
+            <div class="flex gap-3 text-sm font-medium shrink-0">
+                <a href="{% url 'reports:detail' report.pk %}" class="text-stone-600 hover:text-stone-900">View</a>
+                <a href="{% url 'reports:update' report.pk %}" class="text-amber-600 hover:text-amber-700">Edit</a>
+                <a href="{% url 'reports:delete' report.pk %}" class="text-red-600 hover:text-red-700">Delete</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white rounded-xl border border-dashed border-stone-300 p-10 text-center text-stone-500">
+        You haven't posted any reports yet.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
