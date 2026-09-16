@@ -1,19 +1,29 @@
-{% extends "base.html" %}
+{% extends "base_auth.html" %}
 {% load widget_tweaks %}
 {% block title %}Sign Up — Lost & Found Network{% endblock %}
 {% block content %}
-<div class="min-h-screen flex items-center justify-center px-4 py-8">
+<div class="min-h-screen flex items-center justify-center px-4 py-8 auth-bg">
     <div class="flex flex-col md:flex-row w-full max-w-3xl rounded-2xl overflow-hidden shadow-xl">
 
         <div class="w-full md:w-3/5 bg-white p-6 sm:p-10">
-            <h1 class="text-2xl sm:text-3xl font-bold mb-6 sm:mb-8">Create account</h1>
+            <a href="{% url 'core:home' %}" class="flex items-center gap-2 mb-8 w-fit">
+                <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+                    <path d="M9 3H19L25 9V22C25 23.1 24.1 24 23 24H9C7.9 24 7 23.1 7 22V5C7 3.9 7.9 3 9 3Z"
+                          stroke="#D97706" stroke-width="1.8" stroke-linejoin="round"/>
+                    <circle cx="13.5" cy="9.5" r="1.6" stroke="#D97706" stroke-width="1.6"/>
+                </svg>
+                <span class="font-serif text-lg font-bold">Lost <span class="text-amber-600">&amp;</span> Found</span>
+            </a>
+
+            <h1 class="text-2xl sm:text-3xl font-bold mb-1">Create account</h1>
+            <p class="text-stone-500 text-sm mb-8">Join the community and start reporting.</p>
 
             <form method="post" class="space-y-4 sm:space-y-5">
                 {% csrf_token %}
                 {% for field in form %}
                 <div>
                     <label class="block text-xs tracking-wide text-gray-500 mb-1">{{ field.label }}</label>
-                    {% render_field field class="w-full border-b border-gray-300 focus:border-amber-600 outline-none py-1 bg-transparent" %}
+                    {% render_field field class="w-full border-b border-gray-300 focus:border-amber-600 outline-none py-2 bg-transparent" %}
                     {% if field.errors %}
                         <p class="text-red-600 text-xs mt-1">{{ field.errors.0 }}</p>
                     {% endif %}
@@ -31,14 +41,31 @@
             </p>
         </div>
 
-        <div class="hidden md:flex w-2/5 bg-stone-700 text-white flex-col items-center justify-center p-8 text-center space-y-4">
-            <p class="font-medium">Already have an account?<br>Please sign in!</p>
+        <div class="hidden md:flex relative w-2/5 bg-stone-800 text-white flex-col items-center justify-center p-8 text-center space-y-4 overflow-hidden">
+            <div class="auth-hatch absolute inset-0"></div>
+            <svg width="56" height="56" viewBox="0 0 28 28" fill="none" class="relative z-10">
+                <path d="M9 3H19L25 9V22C25 23.1 24.1 24 23 24H9C7.9 24 7 23.1 7 22V5C7 3.9 7.9 3 9 3Z"
+                      stroke="#FBBF24" stroke-width="1.6" stroke-linejoin="round"/>
+                <circle cx="13.5" cy="9.5" r="1.6" stroke="#FBBF24" stroke-width="1.4"/>
+            </svg>
+            <p class="font-medium relative z-10">Already have an account?<br>Please sign in!</p>
             <a href="{% url 'accounts:login' %}"
-               class="border border-white rounded-full px-6 py-2 text-sm hover:bg-white hover:text-stone-700 transition">
+               class="relative z-10 border border-white rounded-full px-6 py-2 text-sm hover:bg-white hover:text-stone-800 transition">
                 Sign in
             </a>
         </div>
 
     </div>
 </div>
+
+<style>
+.auth-bg {
+    background-color: #FAFAF9;
+    background-image: radial-gradient(circle, #E7E5E4 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+.auth-hatch {
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0px, rgba(255,255,255,0.06) 1px, transparent 1px, transparent 10px);
+}
+</style>
 {% endblock %}

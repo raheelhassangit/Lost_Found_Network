@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}
+    {% if report_type == "FOUND" %}Post a found item{% else %}Report a lost item{% endif %}
+{% endblock %}
+{% block content %}
+<div class="max-w-xl mx-auto px-4 sm:px-6 py-16">
+    <div class="bg-white rounded-2xl shadow-xl border border-stone-200 p-8 sm:p-10">
+
+        <h1 class="font-serif text-2xl font-bold mb-1">
+            {% if editing %}
+                Edit report
+            {% elif report_type == "FOUND" %}Post a found item{% else %}Report a lost item{% endif %}
+        </h1>
+        <p class="text-stone-500 text-sm mb-7">
+            {% if report_type == "FOUND" %}
+                Give as much detail as you can so the owner can recognize it.
+            {% else %}
+                Give as much detail as you can to help others spot it.
+            {% endif %}
+        </p>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-5">
+            {% csrf_token %}
+            {% for field in form %}
+            <div>
+                <label class="block text-xs font-medium tracking-wide text-stone-500 mb-1">{{ field.label }}</label>
+                {% render_field field class="w-full border border-stone-300 rounded-lg px-3 py-2 focus:border-amber-600 outline-none" %}
+                {% if field.help_text %}
+                    <p class="text-xs text-stone-400 mt-1">{{ field.help_text }}</p>
+                {% endif %}
+                {% if field.errors %}
+                    <p class="text-red-600 text-xs mt-1">{{ field.errors.0 }}</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <button type="submit"
+                    class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-full font-medium transition">
+                {% if editing %}Save changes{% elif report_type == "FOUND" %}Post report{% else %}Submit report{% endif %}
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

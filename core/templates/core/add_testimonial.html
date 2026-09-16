@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}Leave a review{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto px-4 sm:px-6 py-16">
+    <div class="bg-white rounded-2xl shadow-xl border border-stone-200 p-8 sm:p-10">
+
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" class="mb-4">
+            <path d="M12 2L14.5 8.5L21.5 9.3L16.2 13.9L17.8 20.8L12 17.1L6.2 20.8L7.8 13.9L2.5 9.3L9.5 8.5L12 2Z"
+                  stroke="#D97706" stroke-width="1.6" stroke-linejoin="round"/>
+        </svg>
+
+        <h1 class="font-serif text-2xl font-bold mb-1">Leave a review</h1>
+        <p class="text-stone-500 text-sm mb-7">Let others know what your experience was like.</p>
+
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+
+            <div>
+                <label class="block text-xs font-medium tracking-wide text-stone-500 mb-2">Your rating</label>
+                <div class="star-rating flex flex-row-reverse justify-end gap-1">
+                    {% for radio in form.rating %}
+                        {{ radio.tag }}
+                        <label for="{{ radio.id_for_label }}" class="star-label text-3xl cursor-pointer text-stone-300 transition">&#9733;</label>
+                    {% endfor %}
+                </div>
+                {% if form.rating.errors %}
+                    <p class="text-red-600 text-xs mt-1">{{ form.rating.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <div>
+                <label class="block text-xs font-medium tracking-wide text-stone-500 mb-1">Your review</label>
+                {% render_field form.comment class="w-full border border-stone-300 rounded-lg px-3 py-2 focus:border-amber-600 outline-none resize-none" %}
+                {% if form.comment.errors %}
+                    <p class="text-red-600 text-xs mt-1">{{ form.comment.errors.0 }}</p>
+                {% endif %}
+            </div>
+
+            <button type="submit"
+                    class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-full font-medium transition">
+                Submit review
+            </button>
+        </form>
+    </div>
+</div>
+
+<style>
+.star-rating input { position: absolute; opacity: 0; width: 0; height: 0; }
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: #F59E0B;
+}
+</style>
+{% endblock %}
