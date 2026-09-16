@@ -13,6 +13,19 @@
     <p class="text-stone-600 mb-8">
         Lost & Found Network is free for everyone, and we'd like to keep it that way.
         If it's helped you find something you lost, or reunite someone else with theirs,
+        reach out and we'll share ways you can help keep it running.
+    </p>
+
+    {% if support_email %}
+    <div class="bg-white border border-stone-200 rounded-xl p-6 inline-block">
+        <p class="text-xs text-stone-400 mb-1">Get in touch</p>
+        <a href="mailto:{{ support_email }}" class="text-amber-600 font-medium text-lg hover:text-amber-700">
+            {{ support_email }}
+        </a>
+    </div>
+    {% else %}
+    <p class="text-stone-400 text-sm">Contact details coming soon.</p>
+    {% endif %}
         consider chipping in a little to help cover hosting and keep it running.
     </p>
 

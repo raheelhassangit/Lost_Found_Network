@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from reports.models import Report
 from .models import Testimonial
 from .forms import TestimonialForm
+from django.conf import settings
 
 
 def home_view(request):
@@ -30,5 +31,10 @@ def add_testimonial_view(request):
 
     return render(request, "core/add_testimonial.html", {"form": form})
 
+
+def support_view(request):
+    return render(request, "core/support.html", {
+        "support_email": settings.PLATFORM_SUPPORT_EMAIL,
+    })
 def support_view(request):
     return render(request, "core/support.html")
