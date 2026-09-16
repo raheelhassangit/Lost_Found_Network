@@ -2,10 +2,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Report
+from .models import Report, Category
 from .forms import ReportForm
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.core.paginator import Paginator
+from django.db.models import Q
+
 
 
 @login_required
@@ -69,3 +72,37 @@ def report_create_view(request, report_type):
 def report_detail_view(request, pk):
     report = get_object_or_404(Report.objects.select_related("category", "user"), pk=pk)
     return render(request, "reports/report_detail.html", {"report": report})    
+
+def report_list_view(request):
+    reports = Report.objects.select_related("category", "user").order_by("-created_at")
+
+    report_type = request.GET.get("type")
+    if report_type in Report.ReportType.values:
+        reports = reports.filter(report_type=report_type)
+
+    category_id = request.GET.get("category")
+    if category_id:
+        reports = reports.filter(category_id=category_id)
+
+    query = request.GET.get("q")
+    if query:
+        reports = reports.filter(
+            Q(item_name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(location__icontains=query)
+        )
+
+    paginator = Paginator(reports, 9)
+    page_obj = paginator.get_page(request.GET.get("page"))
+
+    params = request.GET.copy()
+    params.pop("page", None)
+
+    return render(request, "reports/report_list.html", {
+        "page_obj": page_obj,
+        "categories": Category.objects.all(),
+        "selected_type": report_type or "",
+        "selected_category": category_id or "",
+        "query": query or "",
+        "querystring": params.urlencode(),
+    })
