@@ -21,7 +21,10 @@
                 <div>
                     <label class="block text-xs tracking-wide text-gray-500 mb-1">Password</label>
                     <input type="password" name="password" required
-                           class="w-full border-b border-gray-300 focus:border-amber-600 outline-none py-1 bg-transparent">
+                        class="w-full border-b border-gray-300 focus:border-amber-600 outline-none py-1 bg-transparent">
+                        <div class="text-right">
+                            <a href="{% url 'accounts:password_reset' %}" class="text-xs text-amber-600 font-medium">Forgot password?</a>
+                        </div>
                 </div>
                 <button type="submit"
                         class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-full font-medium transition">
