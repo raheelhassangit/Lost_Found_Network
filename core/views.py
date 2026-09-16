@@ -37,4 +37,6 @@ def support_view(request):
         "support_email": settings.PLATFORM_SUPPORT_EMAIL,
     })
 def support_view(request):
-    return render(request, "core/support.html")
+    return render(request, "core/support.html", {
+        "support_email": settings.PLATFORM_SUPPORT_EMAIL,
+    })
