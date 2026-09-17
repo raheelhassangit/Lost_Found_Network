@@ -38,3 +38,16 @@ class Report(models.Model):
 
     def __str__(self):
         return f"[{self.report_type}] {self.item_name}"        
+    
+class Match(models.Model):
+    primary_report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name="matches_as_primary")
+    matched_report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name="matches_as_matched")
+    score = models.PositiveSmallIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-score"]
+        unique_together = ("primary_report", "matched_report")
+
+    def __str__(self):
+        return f"{self.primary_report} ~ {self.matched_report} ({self.score}%)"    
