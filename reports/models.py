@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-# Create your models here.
 
 class Category(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -11,7 +10,7 @@ class Category(models.Model):
 
     class Meta:
         verbose_name_plural = "Categories"
-        
+
 
 class Report(models.Model):
     class ReportType(models.TextChoices):
@@ -37,8 +36,9 @@ class Report(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"[{self.report_type}] {self.item_name}"        
-    
+        return f"[{self.report_type}] {self.item_name}"
+
+
 class Match(models.Model):
     primary_report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name="matches_as_primary")
     matched_report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name="matches_as_matched")
@@ -50,4 +50,14 @@ class Match(models.Model):
         unique_together = ("primary_report", "matched_report")
 
     def __str__(self):
-        return f"{self.primary_report} ~ {self.matched_report} ({self.score}%)"    
+        return f"{self.primary_report} ~ {self.matched_report} ({self.score}%)"
+
+
+class Review(models.Model):
+    report = models.OneToOneField(Report, on_delete=models.CASCADE, related_name="review")
+    reviewed_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Review for {self.report}"

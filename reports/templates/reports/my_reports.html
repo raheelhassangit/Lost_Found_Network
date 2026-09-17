@@ -31,6 +31,9 @@
             <div class="flex gap-3 text-sm font-medium shrink-0">
                 <a href="{% url 'reports:detail' report.pk %}" class="text-stone-600 hover:text-stone-900">View</a>
                 <a href="{% url 'reports:update' report.pk %}" class="text-amber-600 hover:text-amber-700">Edit</a>
+                {% if report.status != 'CLOSED' %}
+                <a href="{% url 'reports:close' report.pk %}" class="text-green-600 hover:text-green-700">Mark resolved</a>
+                {% endif %}
                 <a href="{% url 'reports:delete' report.pk %}" class="text-red-600 hover:text-red-700">Delete</a>
             </div>
         </div>

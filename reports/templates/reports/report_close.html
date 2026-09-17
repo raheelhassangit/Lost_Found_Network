@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% block title %}Mark as resolved{% endblock %}
+{% block content %}
+<div class="max-w-lg mx-auto px-4 sm:px-6 py-16">
+    <div class="bg-white rounded-2xl shadow-xl border border-stone-200 p-8">
+        <h1 class="font-serif text-2xl font-bold mb-2">Mark "{{ report.item_name }}" as resolved</h1>
+        <p class="text-stone-500 text-sm mb-6">A quick note helps others trust the platform. This can't be undone.</p>
+
+        <form method="post" class="space-y-5">
+            {% csrf_token %}
+            {% render_field form.comment class="w-full border border-stone-300 rounded-lg px-3 py-2 focus:border-amber-600 outline-none resize-none" %}
+            <div class="flex gap-3">
+                <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white px-6 py-2.5 rounded-full font-medium transition">
+                    Confirm resolved
+                </button>
+                <a href="{% url 'reports:my_reports' %}" class="text-stone-600 px-6 py-2.5 font-medium hover:text-stone-900">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
