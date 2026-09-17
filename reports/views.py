@@ -18,6 +18,10 @@ def report_list_view(request):
     if report_type in Report.ReportType.values:
         reports = reports.filter(report_type=report_type)
 
+    status = request.GET.get("status")
+    if status in Report.Status.values:
+        reports = reports.filter(status=status)
+
     category_id = request.GET.get("category")
     if category_id:
         reports = reports.filter(category_id=category_id)
@@ -40,6 +44,7 @@ def report_list_view(request):
         "page_obj": page_obj,
         "categories": Category.objects.all(),
         "selected_type": report_type or "",
+        "selected_status": status or "",
         "selected_category": category_id or "",
         "query": query or "",
         "querystring": params.urlencode(),
@@ -181,3 +186,16 @@ def confirm_match_view(request, match_id):
         messages.success(request, "Confirmed. Waiting for the other side to confirm too.")
 
     return redirect("reports:my_matches")
+
+@login_required
+def report_mark_processing_view(request, pk):
+    report = get_object_or_404(Report, pk=pk)
+    if report.user != request.user:
+        raise PermissionDenied
+
+    if request.method == "POST" and report.status == Report.Status.OPEN:
+        report.status = Report.Status.PROCESSING
+        report.save(update_fields=["status"])
+        messages.success(request, "Marked as in progress.")
+
+    return redirect("reports:my_reports")

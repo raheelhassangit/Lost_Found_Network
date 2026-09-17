@@ -12,7 +12,9 @@
 
         <div class="p-8">
             {% if report.status == 'CLOSED' %}
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-200 text-green-600">Resolved</span>
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-stone-200 text-stone-600">Resolved</span>
+            {% elif report.status == 'PROCESSING' %}
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700">In progress</span>
             {% else %}
                 <span class="text-xs font-semibold px-2.5 py-1 rounded-full
                     {% if report.report_type == 'LOST' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">
