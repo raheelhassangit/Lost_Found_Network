@@ -58,6 +58,18 @@
                 <a href="{% url 'reports:delete' report.pk %}" class="text-sm text-red-600 font-medium hover:text-red-700">Delete report</a>
             </div>
             {% endif %}
+
+            {% if report.status == 'CLOSED' and report.review %}
+            <div class="border-t border-stone-200 pt-6 mt-6">
+                <h2 class="font-semibold mb-1">How it was resolved</h2>
+                {% if report.review.comment %}
+                    <p class="text-sm text-stone-600 mb-2">{{ report.review.comment }}</p>
+                {% else %}
+                    <p class="text-sm text-stone-400 mb-2">No additional details provided.</p>
+                {% endif %}
+                <p class="text-xs text-stone-400">Confirmed by {{ report.review.reviewed_by.username }} on {{ report.review.created_at|date:"M j, Y" }}</p>
+            </div>
+            {% endif %}
         </div>
     </div>
 </div>
