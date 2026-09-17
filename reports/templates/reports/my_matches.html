@@ -1,26 +1,41 @@
 {% extends "base.html" %}
-{% block title %}Your matches{% endblock %}
+{% block title %}My Matches{% endblock %}
 {% block content %}
 <div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
-    <h1 class="font-serif text-3xl font-bold mb-2">Your matches</h1>
+    <h1 class="font-serif text-3xl font-bold mb-2">My Matches</h1>
     <p class="text-stone-500 mb-8">Reports the system thinks might be related to yours.</p>
 
     {% if matches %}
     <div class="space-y-4">
         {% for match in matches %}
-        <div class="bg-white rounded-xl border border-stone-200 p-5 flex items-center justify-between gap-4">
-            <div>
-                <p class="text-xs text-stone-400 mb-1">Your report</p>
-                <p class="font-semibold mb-2">{{ match.primary_report.item_name }}</p>
-                <p class="text-xs text-stone-400 mb-1">Possibly matches</p>
-                <a href="{% url 'reports:detail' match.matched_report.pk %}" class="font-semibold text-amber-600 hover:text-amber-700">
-                    {{ match.matched_report.item_name }}
-                </a>
-                <p class="text-sm text-stone-500 mt-1">{{ match.matched_report.location }} &middot; {{ match.matched_report.date }}</p>
+        <div class="bg-white rounded-xl border border-stone-200 p-5">
+            <div class="flex items-center justify-between gap-4 mb-3">
+                <div>
+                    <p class="text-xs text-stone-400 mb-1">Your report</p>
+                    <p class="font-semibold mb-2">{{ match.primary_report.item_name }}</p>
+                    <p class="text-xs text-stone-400 mb-1">Possibly matches</p>
+                    <a href="{% url 'reports:detail' match.matched_report.pk %}" class="font-semibold text-amber-600 hover:text-amber-700">
+                        {{ match.matched_report.item_name }}
+                    </a>
+                    <p class="text-sm text-stone-500 mt-1">{{ match.matched_report.location }} &middot; {{ match.matched_report.date }}</p>
+                </div>
+                <span class="text-sm font-semibold bg-amber-50 text-amber-700 px-3 py-1 rounded-full shrink-0">
+                    {{ match.score }}% match
+                </span>
             </div>
-            <span class="text-sm font-semibold bg-amber-50 text-amber-700 px-3 py-1 rounded-full shrink-0">
-                {{ match.score }}% match
-            </span>
+
+            {% if match.primary_report.status == 'CLOSED' %}
+                <p class="text-sm text-green-700 font-medium">&check; Resolved</p>
+            {% elif match.confirmed %}
+                <p class="text-sm text-stone-500">Waiting for the other side to confirm...</p>
+            {% else %}
+                <form method="post" action="{% url 'reports:confirm_match' match.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-full text-sm font-medium transition">
+                        This is a match — confirm resolved
+                    </button>
+                </form>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

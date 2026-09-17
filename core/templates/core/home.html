@@ -65,10 +65,14 @@
                 <div class="w-full h-44 bg-stone-100 flex items-center justify-center text-stone-400 text-sm">No image</div>
             {% endif %}
             <div class="p-5">
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-full
-                    {% if report.report_type == 'LOST' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">
-                    {{ report.get_report_type_display }}
-                </span>
+                {% if report.status == 'CLOSED' %}
+                    <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-200 text-green-500">Resolved</span>
+                {% else %}
+                    <span class="text-xs font-semibold px-2.5 py-1 rounded-full
+                        {% if report.report_type == 'LOST' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">
+                        {{ report.get_report_type_display }}
+                    </span>
+                {% endif %}
                 <h3 class="font-semibold mt-3">{{ report.item_name }}</h3>
                 <p class="text-sm text-stone-500 mt-1">{{ report.location }} &middot; {{ report.date }}</p>
             </div>

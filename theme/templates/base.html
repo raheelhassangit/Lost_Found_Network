@@ -33,6 +33,7 @@
             <a href="{% url 'reports:list' %}" class="hover:text-amber-600 transition">Browse all reports</a>
             {% if user.is_authenticated %}
             <a href="{% url 'reports:my_reports' %}" class="hover:text-amber-600 transition">My reports</a>
+            <a href="{% url 'reports:my_matches' %}" class="hover:text-amber-600 transition">My Matches</a>
             {% endif %}
             <a href="{% url 'core:home' %}#reviews" class="hover:text-amber-600 transition">Reviews</a>
             <a href="{% url 'core:add_testimonial' %}" class="hover:text-amber-600 transition">Support the platform</a>

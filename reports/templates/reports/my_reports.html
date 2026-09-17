@@ -16,13 +16,17 @@
                 {% endif %}
                 <div>
                     <div class="flex items-center gap-2 mb-1">
-                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full
-                            {% if report.report_type == 'LOST' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">
-                            {{ report.get_report_type_display }}
-                        </span>
-                        <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-600">
-                            {{ report.get_status_display }}
-                        </span>
+                        {% if report.status == 'CLOSED' %}
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-200 text-green-600">Resolved</span>
+                        {% else %}
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full
+                                {% if report.report_type == 'LOST' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">
+                                {{ report.get_report_type_display }}
+                            </span>
+                            <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-600">
+                                {{ report.get_status_display }}
+                            </span>
+                        {% endif %}
                     </div>
                     <h3 class="font-semibold">{{ report.item_name }}</h3>
                     <p class="text-sm text-stone-500">{{ report.location }} &middot; {{ report.date }}</p>

@@ -11,10 +11,14 @@
         {% endif %}
 
         <div class="p-8">
-            <span class="text-xs font-semibold px-2.5 py-1 rounded-full
-                {% if report.report_type == 'LOST' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">
-                {{ report.get_report_type_display }}
-            </span>
+            {% if report.status == 'CLOSED' %}
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-green-200 text-green-600">Resolved</span>
+            {% else %}
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full
+                    {% if report.report_type == 'LOST' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">
+                    {{ report.get_report_type_display }}
+                </span>
+            {% endif %}
 
             <h1 class="font-serif text-2xl sm:text-3xl font-bold mt-3 mb-1">{{ report.item_name }}</h1>
             <p class="text-stone-500 text-sm mb-6">{{ report.location }} &middot; {{ report.date }}</p>
@@ -29,10 +33,6 @@
                 <div>
                     <dt class="text-stone-400">Color</dt>
                     <dd class="font-medium">{{ report.color|default:"Not specified" }}</dd>
-                </div>
-                <div>
-                    <dt class="text-stone-400">Status</dt>
-                    <dd class="font-medium">{{ report.get_status_display }}</dd>
                 </div>
                 <div>
                     <dt class="text-stone-400">Posted by</dt>
