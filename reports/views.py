@@ -18,6 +18,10 @@ def report_list_view(request):
     if report_type in Report.ReportType.values:
         reports = reports.filter(report_type=report_type)
 
+    status = request.GET.get("status")
+    if status in Report.Status.values:
+        reports = reports.filter(status=status)
+
     category_id = request.GET.get("category")
     if category_id:
         reports = reports.filter(category_id=category_id)
@@ -40,6 +44,7 @@ def report_list_view(request):
         "page_obj": page_obj,
         "categories": Category.objects.all(),
         "selected_type": report_type or "",
+        "selected_status": status or "",
         "selected_category": category_id or "",
         "query": query or "",
         "querystring": params.urlencode(),
@@ -49,7 +54,13 @@ def report_list_view(request):
 @login_required
 def my_reports_view(request):
     reports = Report.objects.filter(user=request.user).select_related("category").order_by("-created_at")
-    return render(request, "reports/my_reports.html", {"reports": reports})
+    matched_report_ids = set(
+        Match.objects.filter(primary_report__user=request.user).values_list("primary_report_id", flat=True)
+    )
+    return render(request, "reports/my_reports.html", {
+        "reports": reports,
+        "matched_report_ids": matched_report_ids,
+    })
 
 
 @login_required
@@ -149,3 +160,42 @@ def report_close_view(request, pk):
         form = ReviewForm()
 
     return render(request, "reports/report_close.html", {"form": form, "report": report})
+
+@login_required
+def confirm_match_view(request, match_id):
+    match = get_object_or_404(Match, pk=match_id)
+    if match.primary_report.user != request.user:
+        raise PermissionDenied
+
+    match.confirmed = True
+    match.save(update_fields=["confirmed"])
+
+    mirror = Match.objects.filter(
+        primary_report=match.matched_report,
+        matched_report=match.primary_report,
+    ).first()
+
+    if mirror and mirror.confirmed:
+        for report in [match.primary_report, match.matched_report]:
+            if not hasattr(report, "review"):
+                Review.objects.create(report=report, reviewed_by=report.user, comment="Resolved via match confirmation.")
+            report.status = Report.Status.CLOSED
+            report.save(update_fields=["status"])
+        messages.success(request, "Both sides confirmed — marked resolved!")
+    else:
+        messages.success(request, "Confirmed. Waiting for the other side to confirm too.")
+
+    return redirect("reports:my_matches")
+
+@login_required
+def report_mark_processing_view(request, pk):
+    report = get_object_or_404(Report, pk=pk)
+    if report.user != request.user:
+        raise PermissionDenied
+
+    if request.method == "POST" and report.status == Report.Status.OPEN:
+        report.status = Report.Status.PROCESSING
+        report.save(update_fields=["status"])
+        messages.success(request, "Marked as in progress.")
+
+    return redirect("reports:my_reports")

@@ -43,6 +43,7 @@ class Match(models.Model):
     primary_report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name="matches_as_primary")
     matched_report = models.ForeignKey(Report, on_delete=models.CASCADE, related_name="matches_as_matched")
     score = models.PositiveSmallIntegerField()
+    confirmed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
