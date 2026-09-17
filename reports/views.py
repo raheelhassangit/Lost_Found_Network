@@ -163,6 +163,8 @@ def report_close_view(request, pk):
 
 @login_required
 def confirm_match_view(request, match_id):
+    if request.method != "POST":
+        return redirect("reports:my_matches")
     match = get_object_or_404(Match, pk=match_id)
     if match.primary_report.user != request.user:
         raise PermissionDenied
