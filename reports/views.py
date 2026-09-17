@@ -8,6 +8,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q
+from .matching import generate_matches
+from .models import Match
 
 
 
@@ -59,6 +61,7 @@ def report_create_view(request, report_type):
             report.user = request.user
             report.report_type = report_type
             report.save()
+            generate_matches(report)
             messages.success(request, "Your report has been posted.")
             return redirect("core:home")
     else:
@@ -111,3 +114,10 @@ def report_list_view(request):
 def my_reports_view(request):
     reports = Report.objects.filter(user=request.user).select_related("category").order_by("-created_at")
     return render(request, "reports/my_reports.html", {"reports": reports})    
+
+@login_required
+def my_matches_view(request):
+    matches = Match.objects.filter(
+        primary_report__user=request.user
+    ).select_related("primary_report", "matched_report", "matched_report__user").order_by("-score")
+    return render(request, "reports/my_matches.html", {"matches": matches})
