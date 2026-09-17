@@ -1,5 +1,5 @@
 from django import forms
-from .models import Report
+from .models import Report, Review
 
 
 class ReportForm(forms.ModelForm):
@@ -9,4 +9,13 @@ class ReportForm(forms.ModelForm):
         widgets = {
             "description": forms.Textarea(attrs={"rows": 4}),
             "date": forms.DateInput(attrs={"type": "date"}),
+        }
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ["comment"]
+        widgets = {
+            "comment": forms.Textarea(attrs={"rows": 3, "placeholder": "How did it get resolved?"}),
         }

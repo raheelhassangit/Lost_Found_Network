@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Your matches{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-serif text-3xl font-bold mb-2">Your matches</h1>
+    <p class="text-stone-500 mb-8">Reports the system thinks might be related to yours.</p>
+
+    {% if matches %}
+    <div class="space-y-4">
+        {% for match in matches %}
+        <div class="bg-white rounded-xl border border-stone-200 p-5 flex items-center justify-between gap-4">
+            <div>
+                <p class="text-xs text-stone-400 mb-1">Your report</p>
+                <p class="font-semibold mb-2">{{ match.primary_report.item_name }}</p>
+                <p class="text-xs text-stone-400 mb-1">Possibly matches</p>
+                <a href="{% url 'reports:detail' match.matched_report.pk %}" class="font-semibold text-amber-600 hover:text-amber-700">
+                    {{ match.matched_report.item_name }}
+                </a>
+                <p class="text-sm text-stone-500 mt-1">{{ match.matched_report.location }} &middot; {{ match.matched_report.date }}</p>
+            </div>
+            <span class="text-sm font-semibold bg-amber-50 text-amber-700 px-3 py-1 rounded-full shrink-0">
+                {{ match.score }}% match
+            </span>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-white rounded-xl border border-dashed border-stone-300 p-10 text-center text-stone-500">
+        No potential matches yet.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
