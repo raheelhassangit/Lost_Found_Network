@@ -1,3 +1,5 @@
+from django.tasks import task
+
 MATCH_THRESHOLD = 40
 
 
@@ -37,8 +39,14 @@ def calculate_score(a, b):
     return min(score, 100)
 
 
-def generate_matches(report):
+@task
+def generate_matches_task(report_id):
     from .models import Report, Match
+
+    try:
+        report = Report.objects.get(pk=report_id)
+    except Report.DoesNotExist:
+        return
 
     opposite_type = Report.ReportType.FOUND if report.report_type == Report.ReportType.LOST else Report.ReportType.LOST
     candidates = Report.objects.filter(

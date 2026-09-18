@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Report, Category, Match, Review
 from .forms import ReportForm, ReviewForm
-from .matching import generate_matches
+from .matching import generate_matches_task
 
 
 def report_list_view(request):
@@ -84,7 +84,7 @@ def report_create_view(request, report_type):
             report.user = request.user
             report.report_type = report_type
             report.save()
-            generate_matches(report)
+            generate_matches_task.enqueue(report.pk)
             messages.success(request, "Your report has been posted.")
             return redirect("core:home")
     else:
