@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     "accounts",
     "widget_tweaks",
     "core",
+    "api",
+    "rest_framework",
+    "django_filters",
 ]
 
 if DEBUG:
