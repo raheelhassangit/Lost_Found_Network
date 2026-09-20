@@ -5,7 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 
 from .models import Report, Category, Review
-from .serializers import ReportSerializer, CategorySerializer
+from .serializers import ReportSerializer, CategorySerializer, ReviewSerializer
 from .permissions import IsOwnerOrReadOnly
 from .matching import generate_matches_task
 
@@ -60,3 +60,9 @@ class ReportViewSet(viewsets.ModelViewSet):
         report.status = Report.Status.CLOSED
         report.save(update_fields=["status"])
         return Response(self.get_serializer(report).data)
+    
+class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Review.objects.select_related("report", "reviewed_by").all()
+    serializer_class = ReviewSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["report"]    
