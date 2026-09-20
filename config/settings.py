@@ -76,6 +76,9 @@ if DEBUG:
         "django_browser_reload.middleware.BrowserReloadMiddleware",
     ]
 
+CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="").split(",") if config("CORS_ALLOWED_ORIGINS", default="") else []
+    
+
 ROOT_URLCONF = "config.urls"
 
 LOGIN_URL = "accounts:login"
