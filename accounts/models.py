@@ -1,5 +1,8 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+import secrets
+
+from config import settings
 
 
 class User(AbstractUser):
@@ -7,9 +10,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-    
-import secrets
-
 
 class APIKey(models.Model):
     class Scope(models.TextChoices):
