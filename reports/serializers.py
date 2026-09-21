@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Report, Category, Review
+from .models import Report, Category, Review, Match
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -28,4 +28,10 @@ class ReportSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ["status", "user"]
         
-       
+class MatchSerializer(serializers.ModelSerializer):
+    primary_report = ReportSerializer(read_only=True)
+    matched_report = ReportSerializer(read_only=True)
+
+    class Meta:
+        model = Match
+        fields = ["id", "primary_report", "matched_report", "score", "confirmed", "created_at"]       
