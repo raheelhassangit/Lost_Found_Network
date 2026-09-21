@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Report, Category, Review, Match, Testimonial
+from .models import Report, Category, Review, Match
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -36,10 +36,4 @@ class MatchSerializer(serializers.ModelSerializer):
         model = Match
         fields = ["id", "primary_report", "matched_report", "score", "confirmed", "created_at"]       
         
-class TestimonialSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source="user.username")
-
-    class Meta:
-        model = Testimonial
-        fields = ["id", "user", "rating", "comment", "created_at"]
-        read_only_fields = ["user"]        
+      
