@@ -4,8 +4,8 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 
-from .models import Report, Category, Review
-from .serializers import ReportSerializer, CategorySerializer, ReviewSerializer
+from .models import Report, Category, Review, Match
+from .serializers import ReportSerializer, CategorySerializer, ReviewSerializer, MatchSerializer
 from .permissions import IsOwnerOrReadOnly
 from .matching import generate_matches_task
 
@@ -66,3 +66,36 @@ class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ReviewSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["report"]    
+
+class MatchViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = MatchSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Match.objects.filter(
+            primary_report__user=self.request.user
+        ).select_related("primary_report", "matched_report", "primary_report__user", "matched_report__user")
+
+    @action(detail=True, methods=["post"])
+    def confirm(self, request, pk=None):
+        match = self.get_object()
+        if match.primary_report.user != request.user:
+            return Response({"detail": "Not your match."}, status=status.HTTP_403_FORBIDDEN)
+
+        match.confirmed = True
+        match.save(update_fields=["confirmed"])
+
+        mirror = Match.objects.filter(
+            primary_report=match.matched_report,
+            matched_report=match.primary_report,
+        ).first()
+
+        if mirror and mirror.confirmed:
+            for report in [match.primary_report, match.matched_report]:
+                if not hasattr(report, "review"):
+                    Review.objects.create(report=report, reviewed_by=report.user, comment="Resolved via match confirmation.")
+                report.status = Report.Status.CLOSED
+                report.save(update_fields=["status"])
+            return Response({"detail": "Both sides confirmed — marked resolved!"})
+
+        return Response({"detail": "Confirmed. Waiting for the other side to confirm too."})    
