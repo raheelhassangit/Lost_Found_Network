@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% block title %}API Access{% endblock %}
+{% block content %}
+
+{% if new_key_value %}
+<div id="key-modal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+        <h2 class="font-serif text-xl font-bold mb-2">Your new API key</h2>
+        <p class="text-sm text-stone-500 mb-4">
+            Copy this now &mdash; for your security, you won't be able to see the full key again.
+        </p>
+        <div class="flex items-center gap-2 mb-4">
+            <code id="new-key-text" class="flex-1 text-xs bg-stone-100 px-3 py-2 rounded-lg overflow-x-auto whitespace-nowrap">{{ new_key_value }}</code>
+            <button onclick="copyKey()" id="copy-btn"
+                    class="bg-stone-800 hover:bg-stone-900 text-white px-3 py-2 rounded-lg text-xs font-medium shrink-0">
+                Copy
+            </button>
+        </div>
+        <button onclick="document.getElementById('key-modal').remove()"
+                class="w-full bg-amber-600 hover:bg-amber-700 text-white py-2.5 rounded-full font-medium transition">
+            I've copied it, close
+        </button>
+    </div>
+</div>
+<script>
+function copyKey() {
+    navigator.clipboard.writeText(document.getElementById('new-key-text').textContent);
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+}
+</script>
+{% endif %}
+
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-serif text-3xl font-bold mb-2">API Access</h1>
+    <p class="text-stone-500 mb-8">Use these credentials to call the Lost &amp; Found Network API from Postman, a script, or your own app.</p>
+
+    <div class="bg-white rounded-xl border border-stone-200 p-6 mb-6">
+        <p class="text-xs font-medium text-stone-400 mb-1">Base URL</p>
+        <code class="text-sm bg-stone-100 px-3 py-1.5 rounded-lg inline-block">{{ request.scheme }}://{{ request.get_host }}/api/</code>
+    </div>
+
+    <div class="bg-white rounded-xl border border-stone-200 p-6 mb-6">
+        <p class="text-xs font-medium text-stone-400 mb-1">Access token <span class="text-stone-300">(valid ~1 hour, full access)</span></p>
+        <code class="text-xs bg-stone-100 px-3 py-2 rounded-lg block overflow-x-auto mb-4">{{ access_token }}</code>
+
+        <p class="text-xs font-medium text-stone-400 mb-1">Refresh token <span class="text-stone-300">(valid several days)</span></p>
+        <code class="text-xs bg-stone-100 px-3 py-2 rounded-lg block overflow-x-auto">{{ refresh_token }}</code>
+    </div>
+
+    <div class="bg-white rounded-xl border border-stone-200 p-6 mb-6">
+        <div class="flex items-center justify-between mb-3">
+            <p class="text-xs font-medium text-stone-400">API Keys <span class="text-stone-300">(scoped to one resource, no expiry)</span></p>
+        </div>
+
+        {% for key in api_keys %}
+        <div class="flex items-center justify-between border-b border-stone-100 py-2 last:border-0">
+            <div>
+                <span class="text-xs font-semibold bg-stone-100 px-2 py-1 rounded-full">{{ key.get_scope_display }}</span>
+                <code class="text-xs bg-stone-100 px-2 py-1 rounded ml-2">{{ key.key|truncatechars:16 }}</code>
+                <span class="text-xs text-stone-400 ml-2">{{ key.label|default:"unnamed" }}</span>
+            </div>
+            <form method="post" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="revoke">
+                <input type="hidden" name="key_id" value="{{ key.id }}">
+                <button type="submit" class="text-xs text-red-600 hover:text-red-700">Revoke</button>
+            </form>
+        </div>
+        {% empty %}
+        <p class="text-sm text-stone-400 mb-3">No active API keys yet.</p>
+        {% endfor %}
+
+        <div class="flex flex-wrap gap-2 mt-4">
+            {% for value, label in scopes %}
+            <form method="post" class="inline">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="generate">
+                <input type="hidden" name="scope" value="{{ value }}">
+                <button type="submit" class="bg-stone-800 hover:bg-stone-900 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                    Generate key for {{ label }}
+                </button>
+            </form>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-800 mb-16">
+        Keep these credentials private &mdash; anyone with them can act as you through the API.
+        Access tokens grant full access and expire quickly; API keys don't expire but only work against their assigned resource.
+    </div>
+
+    <hr class="border-stone-200 mb-10">
+
+    <h2 class="font-serif text-2xl font-bold mb-2">API Guide</h2>
+    <p class="text-stone-500 mb-8">How to call this API from your own code, in any language or tool.</p>
+
+    <section class="mb-10">
+        <h3 class="font-serif text-lg font-bold mb-3">Two ways to authenticate</h3>
+        <p class="text-sm text-stone-600 mb-4">Pick whichever fits your use case &mdash; both work on every endpoint.</p>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-white rounded-xl border border-stone-200 p-5">
+                <p class="text-xs font-semibold text-amber-700 mb-1">Access token (JWT)</p>
+                <p class="text-sm text-stone-600 mb-3">Best for an app where a user logs in and stays active for a session. Expires in ~1 hour; refresh to get a new one.</p>
+                <code class="text-xs bg-stone-100 px-2 py-1 rounded block">Authorization: Bearer &lt;access_token&gt;</code>
+            </div>
+            <div class="bg-white rounded-xl border border-stone-200 p-5">
+                <p class="text-xs font-semibold text-amber-700 mb-1">API key</p>
+                <p class="text-sm text-stone-600 mb-3">Best for a script or integration that runs unattended for a long time. Never expires, but only works against the resource it was scoped to.</p>
+                <code class="text-xs bg-stone-100 px-2 py-1 rounded block">X-API-Key: &lt;your_key&gt;</code>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-10">
+        <h3 class="font-serif text-lg font-bold mb-3">1. Get an access token</h3>
+        <p class="text-sm text-stone-600 mb-3">Exchange your username and password for a token pair &mdash; or just copy the one generated above.</p>
+        <pre class="text-xs bg-stone-900 text-stone-100 p-4 rounded-lg overflow-x-auto">curl -X POST {{ request.scheme }}://{{ request.get_host }}/api/token/ \
+  -H "Content-Type: application/json" \
+  -d '{"username": "your_username", "password": "your_password"}'</pre>
+    </section>
+
+    <section class="mb-10">
+        <h3 class="font-serif text-lg font-bold mb-3">2. Make a request</h3>
+
+        <p class="text-sm font-medium text-stone-700 mb-2">curl</p>
+        <pre class="text-xs bg-stone-900 text-stone-100 p-4 rounded-lg overflow-x-auto mb-5">curl {{ request.scheme }}://{{ request.get_host }}/api/reports/?type=LOST \
+  -H "Authorization: Bearer &lt;access_token&gt;"</pre>
+
+        <p class="text-sm font-medium text-stone-700 mb-2">Python (requests)</p>
+        <pre class="text-xs bg-stone-900 text-stone-100 p-4 rounded-lg overflow-x-auto mb-5">import requests
+
+headers = {"Authorization": "Bearer &lt;access_token&gt;"}
+res = requests.get("{{ request.scheme }}://{{ request.get_host }}/api/reports/", headers=headers)
+print(res.json())</pre>
+
+        <p class="text-sm font-medium text-stone-700 mb-2">JavaScript (fetch)</p>
+        <pre class="text-xs bg-stone-900 text-stone-100 p-4 rounded-lg overflow-x-auto mb-5">fetch("{{ request.scheme }}://{{ request.get_host }}/api/reports/", {
+  headers: { "Authorization": "Bearer &lt;access_token&gt;" }
+})
+  .then(res => res.json())
+  .then(data => console.log(data));</pre>
+
+        <p class="text-sm font-medium text-stone-700 mb-2">Using an API key instead</p>
+        <pre class="text-xs bg-stone-900 text-stone-100 p-4 rounded-lg overflow-x-auto">curl {{ request.scheme }}://{{ request.get_host }}/api/reports/mine/ \
+  -H "X-API-Key: &lt;your_reports_scoped_key&gt;"</pre>
+    </section>
+
+    <section class="mb-10">
+        <h3 class="font-serif text-lg font-bold mb-3">3. Create a report</h3>
+        <pre class="text-xs bg-stone-900 text-stone-100 p-4 rounded-lg overflow-x-auto">curl -X POST {{ request.scheme }}://{{ request.get_host }}/api/reports/ \
+  -H "Authorization: Bearer &lt;access_token&gt;" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "report_type": "LOST",
+    "item_name": "Black wallet",
+    "description": "Leather wallet with student ID inside",
+    "category": 1,
+    "color": "Black",
+    "location": "Main Library",
+    "date": "2026-09-20"
+  }'</pre>
+        <p class="text-xs text-stone-400 mt-2">The <code class="bg-stone-100 px-1 rounded">user</code> and <code class="bg-stone-100 px-1 rounded">status</code> fields are set automatically &mdash; don't send them.</p>
+    </section>
+
+    <section class="mb-10">
+        <h3 class="font-serif text-lg font-bold mb-3">4. Refresh an expired token</h3>
+        <pre class="text-xs bg-stone-900 text-stone-100 p-4 rounded-lg overflow-x-auto">curl -X POST {{ request.scheme }}://{{ request.get_host }}/api/token/refresh/ \
+  -H "Content-Type: application/json" \
+  -d '{"refresh": "&lt;refresh_token&gt;"}'</pre>
+    </section>
+
+    <section class="mb-10">
+        <h3 class="font-serif text-lg font-bold mb-3">Available endpoints</h3>
+        <div class="bg-white rounded-xl border border-stone-200 overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-stone-50 text-stone-500 text-xs">
+                    <tr>
+                        <th class="text-left px-4 py-2 font-medium">Method</th>
+                        <th class="text-left px-4 py-2 font-medium">Endpoint</th>
+                        <th class="text-left px-4 py-2 font-medium">Description</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-stone-100">
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">GET</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/reports/</td><td class="px-4 py-2 text-stone-600">List reports (filter: type, status, category; search; order)</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">POST</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/reports/</td><td class="px-4 py-2 text-stone-600">Create a report</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">GET</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/reports/{id}/</td><td class="px-4 py-2 text-stone-600">Get one report</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">PATCH</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/reports/{id}/</td><td class="px-4 py-2 text-stone-600">Update your own report</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">DELETE</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/reports/{id}/</td><td class="px-4 py-2 text-stone-600">Delete your own report</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">GET</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/reports/mine/</td><td class="px-4 py-2 text-stone-600">Your own reports</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">POST</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/reports/{id}/mark_processing/</td><td class="px-4 py-2 text-stone-600">Mark in progress</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">POST</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/reports/{id}/close/</td><td class="px-4 py-2 text-stone-600">Resolve with a review comment</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">GET</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/matches/</td><td class="px-4 py-2 text-stone-600">Your potential matches</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">POST</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/matches/{id}/confirm/</td><td class="px-4 py-2 text-stone-600">Confirm a match</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">GET</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/categories/</td><td class="px-4 py-2 text-stone-600">List categories</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">GET</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/reviews/?report={id}</td><td class="px-4 py-2 text-stone-600">Get a report's review</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">GET</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/testimonials/</td><td class="px-4 py-2 text-stone-600">List testimonials</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">POST</td><td class="px-4 py-2 font-mono text-xs whitespace-nowrap">/api/testimonials/</td><td class="px-4 py-2 text-stone-600">Add a testimonial</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="mb-10">
+        <h3 class="font-serif text-lg font-bold mb-3">Common errors</h3>
+        <div class="bg-white rounded-xl border border-stone-200 overflow-hidden">
+            <table class="w-full text-sm">
+                <tbody class="divide-y divide-stone-100">
+                    <tr><td class="px-4 py-2 font-mono text-xs text-red-600">401</td><td class="px-4 py-2 text-stone-600">Missing or invalid token/key</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs text-red-600">403</td><td class="px-4 py-2 text-stone-600">You don't own this resource, or your API key's scope doesn't cover it</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs text-red-600">404</td><td class="px-4 py-2 text-stone-600">Doesn't exist, or belongs to someone else</td></tr>
+                    <tr><td class="px-4 py-2 font-mono text-xs text-red-600">429</td><td class="px-4 py-2 text-stone-600">Too many requests &mdash; you're being rate-limited</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-sm text-amber-800">
+        Anonymous (unauthenticated) requests can only <code class="bg-white px-1 rounded">GET</code> &mdash; reading is public, writing requires a token or key.
+    </div>
+</div>
+{% endblock %}

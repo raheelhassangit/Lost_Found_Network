@@ -11,6 +11,8 @@ from .serializers import ReportSerializer, CategorySerializer, ReviewSerializer,
 from .permissions import IsOwnerOrReadOnly
 from .matching import generate_matches_task
 
+from accounts.permissions import HasAPIKeyScope
+from accounts.models import APIKey
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.all()
@@ -18,9 +20,10 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ReportViewSet(viewsets.ModelViewSet):
+    required_scope = APIKey.Scope.REPORTS
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly, HasAPIKeyScope]
     queryset = Report.objects.select_related("category", "user").all()
     serializer_class = ReportSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = ["report_type", "status", "category"]
     search_fields = ["item_name", "description", "location"]
@@ -71,7 +74,9 @@ class ReviewViewSet(viewsets.ReadOnlyModelViewSet):
 
 class MatchViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = MatchSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    required_scope = APIKey.Scope.MATCHES
+    permission_classes = [permissions.IsAuthenticated, HasAPIKeyScope]
+
 
     def get_queryset(self):
         return Match.objects.filter(
@@ -101,3 +106,5 @@ class MatchViewSet(viewsets.ReadOnlyModelViewSet):
             return Response({"detail": "Both sides confirmed — marked resolved!"})
 
         return Response({"detail": "Confirmed. Waiting for the other side to confirm too."})    
+    
+    
