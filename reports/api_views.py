@@ -4,8 +4,10 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 
+from core.models import Testimonial
+
 from .models import Report, Category, Review, Match
-from .serializers import ReportSerializer, CategorySerializer, ReviewSerializer, MatchSerializer
+from .serializers import ReportSerializer, CategorySerializer, ReviewSerializer, MatchSerializer, TestimonialSerializer, TestimonialSerializer
 from .permissions import IsOwnerOrReadOnly
 from .matching import generate_matches_task
 
@@ -99,3 +101,12 @@ class MatchViewSet(viewsets.ReadOnlyModelViewSet):
             return Response({"detail": "Both sides confirmed — marked resolved!"})
 
         return Response({"detail": "Confirmed. Waiting for the other side to confirm too."})    
+    
+class TestimonialViewSet(viewsets.ModelViewSet):
+    queryset =  Testimonial.objects.select_related("user").order_by("-created_at")
+    serializer_class = TestimonialSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    http_method_names = ["get", "post", "head", "options"]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)    
