@@ -1,29 +1,55 @@
 {% extends "base.html" %}
 {% block title %}Terms & Conditions{% endblock %}
 {% block content %}
-<div class="max-w-3xl mx-auto px-4 sm:px-6 py-12 prose prose-stone">
-    <h1 class="font-serif text-3xl font-bold mb-2">Terms & Conditions</h1>
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-serif text-3xl font-bold mb-1">Terms & Conditions</h1>
     <p class="text-stone-400 text-sm mb-8">Last updated: September 2026</p>
 
-    <h2 class="font-semibold mt-6 mb-2">1. What this platform is</h2>
-    <p class="text-stone-600 text-sm">Lost & Found Network helps community members report, browse, and reconnect over lost or found items. It's a free community tool, not a guarantee of recovery.</p>
-
-    <h2 class="font-semibold mt-6 mb-2">2. Your account</h2>
-    <p class="text-stone-600 text-sm">You're responsible for the accuracy of what you post and for keeping your login credentials secure.</p>
-
-    <h2 class="font-semibold mt-6 mb-2">3. Reports & contact</h2>
-    <p class="text-stone-600 text-sm">You agree to post honest, accurate reports. Contact details you provide (like phone number) are shown to other users solely to help verify and return items — never sold or used for marketing.</p>
-
-    <h2 class="font-semibold mt-6 mb-2">4. No guarantee</h2>
-    <p class="text-stone-600 text-sm">We don't guarantee an item will be found, matched, or returned. Verifying ownership before handing over an item is your responsibility.</p>
-
-    <h2 class="font-semibold mt-6 mb-2">5. Prohibited use</h2>
-    <p class="text-stone-600 text-sm">No fake reports, harassment, or using contact info for anything outside item recovery. Accounts may be suspended for abuse.</p>
-
-    <h2 class="font-semibold mt-6 mb-2">6. API access</h2>
-    <p class="text-stone-600 text-sm">Access tokens and API keys are personal and must not be shared. You're responsible for activity made with your credentials.</p>
-
-    <h2 class="font-semibold mt-6 mb-2">7. Changes</h2>
-    <p class="text-stone-600 text-sm">These terms may be updated as the platform evolves. Continued use means you accept the current version.</p>
+    <div class="bg-white rounded-2xl border border-stone-200 divide-y divide-stone-100">
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">1. Acceptance of terms</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">By creating an account or using Lost & Found Network ("the Platform"), you agree to these Terms. If you don't agree, please don't use the Platform.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">2. What the Platform is</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">The Platform is a free, community-run tool for reporting lost items, posting found items, and helping connect people to recover their belongings. It is provided "as is," with no guarantee that any item will be found, matched, or returned.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">3. Account responsibilities</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">You must provide accurate information when registering and keep your login credentials confidential. You are responsible for all activity under your account. Notify us immediately if you suspect unauthorized access.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">4. Posting reports</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">You agree that any Lost or Found report you submit is truthful and accurate to the best of your knowledge. Posting fraudulent, misleading, or malicious reports may result in account suspension or removal.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">5. Contact & communication</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">Contact details you provide (such as a phone number) may be shown to other authenticated users on relevant reports, solely to help verify ownership and coordinate the return of an item. Do not use another user's contact information for any other purpose.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">6. Item verification and exchange</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">The Platform does not mediate, verify, or guarantee any exchange between users. You are solely responsible for verifying ownership before returning or accepting an item, and for taking reasonable precautions when meeting another user in person.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">7. Prohibited conduct</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">You may not use the Platform to harass other users, post false or fraudulent reports, scrape or misuse data, attempt to bypass security controls, or use contact information for marketing or unrelated purposes. Violations may result in suspension or termination of your account.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">8. API access</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">If you generate an access token or API key, you are responsible for keeping it confidential and for all activity performed using it. API access is provided for personal, non-commercial use unless otherwise agreed. We may revoke API access that violates these Terms or is used to abuse the Platform.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">9. Limitation of liability</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">The Platform is provided free of charge, without warranties of any kind. We are not liable for any loss, damage, or dispute arising from items reported, matched, or exchanged through the Platform, or from interactions between users.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">10. Changes to these terms</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">We may update these Terms as the Platform evolves. Continued use of the Platform after changes are posted constitutes acceptance of the revised Terms.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">11. Contact</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">Questions about these Terms can be sent through our <a href="{% url 'core:support' %}" class="text-amber-600 font-medium">Support page</a>.</p>
+        </div>
+    </div>
 </div>
 {% endblock %}
