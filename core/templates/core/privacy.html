@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+    <h1 class="font-serif text-3xl font-bold mb-1">Privacy Policy</h1>
+    <p class="text-stone-400 text-sm mb-8">Last updated: September 2026</p>
+
+    <div class="bg-white rounded-2xl border border-stone-200 divide-y divide-stone-100">
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">1. Information we collect</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">We collect information you provide directly: your username, email address, optional phone number, and any content you submit, including report details, images, reviews, and testimonials.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">2. How we use your information</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">We use this information to operate the Platform: displaying your reports to other users, running our matching system to suggest potential matches, allowing other users to contact you about a specific report, sending account and password-reset emails, and improving the Platform over time.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">3. What's visible to other users</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">Your reports (item details, location, date, image) are visible to anyone browsing the Platform. Your phone number is shown only to authenticated users viewing a specific report tied to your account, to help them verify and coordinate a return. Your email address is never shown publicly.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">4. API credentials</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">Access tokens and API keys you generate allow you, or software you control, to access your own account data through the API. These credentials are shown to you once and are not accessible to Platform staff or other users. We are not responsible for credentials you choose to share with third parties.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">5. Data retention</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">Your account and report data are retained as long as your account remains active. You may delete individual reports at any time. To request full account deletion, contact us via the Support page.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">6. Data sharing</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">We do not sell, rent, or share your personal information with third parties for marketing purposes. Information is only shared with other users as described in Section 3, to the extent necessary for the Platform to function.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">7. Security</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">We take reasonable measures to protect your data, including password hashing and secure credential storage. No system is completely secure, and we encourage you to use a strong, unique password.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">8. Changes to this policy</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">We may update this Privacy Policy from time to time. Continued use of the Platform after changes are posted constitutes acceptance of the revised policy.</p>
+        </div>
+        <div class="p-6">
+            <h2 class="font-semibold mb-2">9. Contact</h2>
+            <p class="text-sm text-stone-600 leading-relaxed">Questions about this Privacy Policy can be sent through our <a href="{% url 'core:support' %}" class="text-amber-600 font-medium">Support page</a>.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

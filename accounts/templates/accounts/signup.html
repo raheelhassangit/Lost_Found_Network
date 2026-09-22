@@ -29,6 +29,9 @@
                     {% endif %}
                 </div>
                 {% endfor %}
+                <p class="text-xs text-stone-400">
+                    By signing up you agree to our <a href="{% url 'core:terms' %}" class="text-amber-600">Terms</a> and <a href="{% url 'core:privacy' %}" class="text-amber-600">Privacy Policy</a>.
+                </p>
                 <button type="submit"
                         class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-full font-medium transition">
                     Sign up
