@@ -73,3 +73,9 @@ def get_api_view(request):
         "scopes": APIKey.Scope.choices,
         "new_key_value": None,
     })
+    
+def terms_view(request):
+    return render(request, "core/terms.html")
+
+def privacy_view(request):
+    return render(request, "core/privacy.html")    
