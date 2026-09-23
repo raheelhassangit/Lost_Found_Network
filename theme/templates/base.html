@@ -62,7 +62,7 @@
         </div>
     </div>
 
-    <div id="mobile-menu" class="hidden md:hidden border-t border-stone-200 px-4 py-3 flex-col gap-3 text-sm font-medium text-stone-600">
+    <div id="mobile-menu" class="hidden md:flex md:hidden border-t border-stone-200 px-4 py-3 flex-col gap-3 text-sm font-medium text-stone-600">
         <a href="{% url 'reports:list' %}" class="hover:text-amber-600 transition">Browse all reports</a>
         {% if user.is_authenticated %}
         <a href="{% url 'reports:my_reports' %}" class="hover:text-amber-600 transition">My reports</a>
@@ -165,7 +165,10 @@
 
 <script>
 document.getElementById('mobile-menu-btn').addEventListener('click', function () {
-    document.getElementById('mobile-menu').classList.toggle('hidden');
+    const menu = document.getElementById('mobile-menu');
+
+    menu.classList.toggle('hidden');
+    menu.classList.toggle('flex');
 });
 </script>
 
