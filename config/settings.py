@@ -191,7 +191,7 @@ STORAGES = {
 }
 
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    # BASE_DIR / 'static',
     # BASE_DIR / 'base' / 'static',
 ]
 
